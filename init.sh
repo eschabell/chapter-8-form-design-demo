@@ -92,6 +92,10 @@ echo "  - setting up user account..."
 echo
 $JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u erics -p bpmsuite1! -ro analyst,admin,manager,user,kie-server,kiemgmt,rest-all --silent
 
+echo "  - setting up demo projects..."
+echo
+cp -r $SUPPORT_DIR/bpm-suite-demo-niogit $SERVER_BIN/.niogit
+
 echo "  - setting up standalone.xml configuration adjustments..."
 echo
 cp $SUPPORT_DIR/standalone.xml $SERVER_CONF

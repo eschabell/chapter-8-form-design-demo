@@ -19,28 +19,28 @@ ENV EAP_INSTALLER=jboss-eap-$EAP_VERSION_MAJOR.$EAP_VERSION_MINOR.$EAP_VERSION_M
 ENV BPMS_DEPLOYABLE=jboss-bpmsuite-$BPMS_VERSION_MAJOR.$BPMS_VERSION_MINOR.$BPMS_VERSION_MICRO.$BPMS_VERSION_PATCH-deployable-eap7.x.zip
 
 # ADD Installation and Management Files
-COPY support/installation-eap support/installation-eap.variables installs/$BPMS_DEPLOYABLE installs/$EAP_INSTALLER support/fix-permissions /opt/jboss/
+COPY support/installation-eap support/installation-eap.variables installs/$BPMS_DEPLOYABLE installs/$EAP_INSTALLER /opt/jboss/
 
 # Update Permissions on Installers
 USER root
 RUN chown 1000:1000 /opt/jboss/$EAP_INSTALLER /opt/jboss/$BPMS_DEPLOYABLE
+USER 1000
 
 # Prepare and run installer and cleanup installation components
 RUN sed -i "s:<installpath>.*</installpath>:<installpath>$BPMS_HOME</installpath>:" /opt/jboss/installation-eap \
     && java -jar /opt/jboss/$EAP_INSTALLER  /opt/jboss/installation-eap -variablefile /opt/jboss/installation-eap.variables \
     && unzip -qo /opt/jboss/$BPMS_DEPLOYABLE  -d $BPMS_HOME/.. \
-    && chown -R 1000:root $BPMS_HOME \
-    && /opt/jboss/fix-permissions $BPMS_HOME \
     && rm -rf /opt/jboss/$BPMS_DEPLOYABLE /opt/jboss/$EAP_INSTALLER /opt/jboss/installation-eap /opt/jboss/installation-eap.variables $BPMS_HOME/standalone/configuration/standalone_xml_history/ \
     && $BPMS_HOME/bin/add-user.sh -a -r ApplicationRealm -u erics -p bpmsuite1! -ro analyst,admin,manager,user,kie-server,kiemgmt,rest-all --silent
 
 # Add support files
+COPY support/bpm-suite-demo-niogit $BPMS_HOME/bin/.niogit
 COPY support/standalone.xml $BPMS_HOME/standalone/configuration/
 COPY support/userinfo.properties $BPMS_HOME/standalone/deployments/business-central.war/WEB-INF/classes/
 
-# Fix permissions on support files
-RUN /opt/jboss/fix-permissions $BPMS_HOME/standalone/configuration/standalone.xml && \
-    /opt/jboss/fix-permissions $BPMS_HOME/standalone/deployments/business-central.war/WEB-INF/classes/userinfo.properties
+# Swtich back to root user to set permissions.
+USER root
+RUN chown -R 1000:1000 $BPMS_HOME/bin/.niogit $BPMS_HOME/standalone/configuration/standalone.xml $BPMS_HOME/standalone/deployments/business-central.war/WEB-INF/classes/userinfo.properties
 
 # Run as JBoss 
 USER 1000
