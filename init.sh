@@ -88,7 +88,6 @@ if [ $? -ne 0 ]; then
 	exit
 fi
 
-echo
 echo "  - setting up user account..."
 echo
 $JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u erics -p bpmsuite1! -ro analyst,admin,manager,user,kie-server,kiemgmt,rest-all --silent
@@ -106,18 +105,17 @@ echo "  - making sure standalone.sh for server is executable..."
 echo
 chmod u+x $JBOSS_HOME/bin/standalone.sh
 
-echo
 echo "========================================================================"
 echo "=                                                                      ="
 echo "=  You can now start the $PRODUCT with:                         ="
 echo "=                                                                      ="
-echo "=   $SERVER_BIN/standalone.sh                      ="
+echo "=   $SERVER_BIN/standalone.sh                           ="
 echo "=                                                                      ="
 echo "=  Log in into business central at:                                    ="
 echo "=                                                                      ="
 echo "=    http://localhost:8080/business-central  (u:erics / p:bpmsuite1!)  ="
 echo "=                                                                      ="
-echo "=  $PRODUCT $VERSION $DEMO Setup Complete.        ="
+echo "=  $PRODUCT $VERSION $DEMO Setup Complete.      ="
 echo "=                                                                      ="
 echo "========================================================================"
 echo
