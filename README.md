@@ -1,3 +1,6 @@
+Update: Moved to [Gitlab](https://gitlab.com/eschabell/chapter-8-form-design-demo).
+
+
 Chapter 8 - Form Design Demo 
 =============================
 This is an example project for the Effective Business Process Management with JBoss BPM book, 
